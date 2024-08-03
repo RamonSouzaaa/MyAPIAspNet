@@ -4,6 +4,14 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 var todos = new List<Todo>();
 
+//Middlewares
+app.Use(async (context, next) => {
+    Console.WriteLine($"[{context.Request.Method} {context.Request.Path} {DateTime.Now}] Start");
+    await next(context);
+    Console.WriteLine($"[{context.Request.Method} {context.Request.Path} {DateTime.Now}] Finished");
+});
+
+//Routes
 app.MapGet("/todos", () => todos);
 app.MapGet("/todos/{id}", Results<Ok<Todo>, NotFound> (int id) => 
 {
